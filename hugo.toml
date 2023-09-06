@@ -1,0 +1,4 @@
+baseURL = 'https://www.compassak.top/'
+languageCode = 'zh-CN'
+title = 'COMPASSAK'
+theme = 'PaperMod'
