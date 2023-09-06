@@ -1,0 +1,33 @@
+name: Hugo Publish
+
+on:
+  push:
+    branches:
+      - main  # Set a branch to deploy
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-20.04.1
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.118.2'
+          # extended: true
+
+      - name: Build
+        run: hugo --minify
+
+      - name: SSH Deploy
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SOURCE: "public/"
+          REMOTE_HOST: ${{ secrets.HOST }}
+          REMOTE_USER: ${{ secrets.USER }}
+          TARGET: ${{ secrets.TARGET }}
