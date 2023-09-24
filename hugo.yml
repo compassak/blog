@@ -36,7 +36,7 @@ params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
   ShowToc: true
   defaultTheme: auto
-  ShowShareButtons: true
+  ShowShareButtons: false
   ShowReadingTime: true
   ShowPostNavLinks: true
   ShowCodeCopyButtons: true
