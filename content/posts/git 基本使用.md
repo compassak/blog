@@ -4,6 +4,10 @@ date: 2021-04-06T18:12:57+08:00
 tags:  ["git","revision control"]
 ---
 
+![](https://cloud.compassak.top/s/DzPZepCJ76awCfe/preview)
+
+
+
 ### git 的工作区域和文件状态
 
 1. 工作区（Working Directory）
