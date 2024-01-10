@@ -1,5 +1,5 @@
 ---
-title: "git原理与基本使用"
+title: "git基本使用"
 date: 2021-04-06T18:12:57+08:00
 tags:  ["git","revision control"]
 ---
