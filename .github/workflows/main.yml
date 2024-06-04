@@ -24,7 +24,7 @@ jobs:
         run: npm install -g postcss postcss-cli autoprefixer postcss-import tailwindcss
 
       - name: Build
-        run: hugo --minify
+        run: hugo --gc --minify
 
       - name: SSH Deploy
         uses: easingthemes/ssh-deploy@v2.1.5
