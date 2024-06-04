@@ -2,7 +2,13 @@
 title: "Shortest Path"
 date: 2020-07-24T19:03:39+08:00
 tags:  ["graph"]
+
+# featured posts are shown on the homepage
+featured: true
+draft: false
 ---
+
+
 
 ### <center>最短路径</center>
 

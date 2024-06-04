@@ -8,8 +8,6 @@ description: ""
 author: ""
 ---
 
-![1f7c8ff36c1442a2bcdc63804b4369dd](https://cloud.compassak.top/s/i8N6fMY2ckZtTKr/preview)
-
 
 
 ### 确定大致范围

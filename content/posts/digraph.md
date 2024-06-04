@@ -2,6 +2,7 @@
 title: "Digraph"
 date: 2020-07-18T09:23:35+08:00
 tags:  ["graph"]
+
 ---
 
 # 有向图
@@ -30,7 +31,7 @@ tags:  ["graph"]
 
 有向图虽然在逻辑上比无向图中多出了许多限定条件，但是其数据类型的实现更简单。由于边是有向的，所以我们用邻接表表示边时，只会出现一次。具体实现细节如下：
 
-```
+```java
 public class Digraph{
     private final int V;    // 顶点数
     private int E;          // 边数
@@ -119,7 +120,7 @@ public class Digraph{
 
 这个问题又叫做：_点单可达性_ （给定一幅有向图和一个起点 s，“是否存在一条从 s 到达给定顶点 v 的有向路径？”）解决这个有向图的问题我们只需要将 DepthFirstSearch 稍作改动，将 Graph 数据类型替换位 Digraph 数据类型即可。DirectedDFS具体实现如下：
 
-```
+```java
 public class DirectedDFS {
     private boolean[] marked;   // 标记已访问过的顶点
     private int count;          // 与起点连通的结点数
@@ -169,7 +170,7 @@ public class DirectedDFS {
 
 有时候找到一条顶点间的有向路径还不能满足我们的需求，我们希望能找到连接两个顶点有向路径中最短的那一条。 看到最短是不是马上就想到了 **广度优先搜索**，我们只需要给 breadthFirstPaths 添加一个接受有向图参数构造函数和bfs()方法, 方法内容与无向图一模一样。我们就可以找到两个连通顶点间最短的有向路径（由于无向图与有向图的数据表示与无向图没有区别，只是在逻辑上有区别）。构造函数，bfs()函数如下：
 
-```
+```java
     public BreadthFirstPaths(Digraph g, int s){
         marked = new boolean[g.V()];
         edgeTo = new int[g.V()];
@@ -221,7 +222,7 @@ public class DirectedDFS {
 
 判断图中是否存在环，这是深度优先搜索的拿手本领。基于深度优先搜索的实现的 DirectedCycle 如下。
 
-```
+```java
 public class DirectedCycle {
     private boolean[] marked;   // 标记已访问过的顶点
     private int[] edgeTo;       // 记录起点到各连通顶点的路径
@@ -283,7 +284,7 @@ public class DirectedCycle {
 
 基于深度优先搜索的顶点排序类：DepthFirstOrder 如下。实现了 pre(),post(), reversePost()。可以获得基于深度优先遍历图顶点的前序序列，后序序列，逆后序序列。
 
-```
+```java
 public class DepthFirstOrder {
     private boolean[] marked;       // 标记已访问过的顶点
     private ArrayList<Integer> pre; // 前序遍历顶点排列
@@ -409,7 +410,7 @@ Kosaraju 算法的基本流程为：
 
 其基本实现如下：
 
-```
+```java
 public class KosarajuSCC {
     private boolean[] marked;   // 标记已访问过的顶点
     private int[] id;           // 顶点对应索引，值为连通分量的id

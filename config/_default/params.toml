@@ -1,0 +1,10 @@
+# Meta tags
+author = "compassak"
+description = "blog."
+
+# Social links
+email = "quakang9@gmail.com"
+github = "compassak"
+
+# Search in site
+minisearch_enabled = true
