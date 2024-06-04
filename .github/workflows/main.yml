@@ -21,7 +21,7 @@ jobs:
           # extended: true
 
       - name: Npm install
-        run: npm install -g postcss postcss-cli autoprefixer
+        run: npm install -g postcss postcss-cli autoprefixer & cd themes/hugo-northeast & npm install
 
       - name: Build
         run: hugo --minify
