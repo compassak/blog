@@ -20,8 +20,8 @@ jobs:
           hugo-version: '0.118.2'
           # extended: true
 
-      - name: Npm install
-        run: npm install -g postcss postcss-cli autoprefixer postcss-import tailwindcss
+#      - name: Npm install
+#        run: npm install -g postcss postcss-cli autoprefixer postcss-import tailwindcss
 
       - name: Build
         run: hugo --gc --minify
