@@ -1,7 +1,7 @@
 ---
 title: "git 基本使用"
 date: 2021-04-06T18:12:57+08:00
-categories: ["Algorithm"]
+categories: ["git"]
 tags:  ["git","vision control"]
 ---
 
