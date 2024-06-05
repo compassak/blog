@@ -560,7 +560,7 @@ bfp 0->6 : 0-6
 
 广度优先搜索与深度优先搜索的区别从下图中可以更明显的看出：
 
-{{< figure src="depth_breadth_diff.png" caption="depth breadth different graph" numbered="true" >}}
+{{< figure src="depth_breadth_diff.png"  caption="depth breadth different" numbered="true" >}}
 
 上图，显示了深度优先搜索和广度优先搜索处理含有250个顶点图的过程，左图为深度优先搜索，右图为广度优先搜索，它们清晰地展示了两种方法中搜索路径的不同。深度优先搜索不断深入图中并在栈中保存了所有分叉的顶点；广度优先搜索则像扇面一般扫描图，用一个队列保存访问过的最前端的顶点。深度优先搜索探索一幅图的方式是寻找离起点更远的顶点，只在碰到死胡同时才访问近处的顶点；广度优先搜索则会首先覆盖起点附近的顶点，只在临近的所有顶点都被访问了之后才向前进。
 
@@ -688,9 +688,9 @@ bfp JFK->LAS : JFK-ORD-DEN-LAS
 ```
 
 
-{{< figure src="airport.png" caption="airport graph" numbered="true" >}}
+{{< figure src="airport.png" caption="airport"  numbered="true" >}}
 
-<center>用例图示</center>
+
 
 上述用例输入的是根据一个小运输系统抽象出来的模型，具体的情况如上图所示。其中表示每个顶点的是美国机场的代码，连接它们的边则表示顶点之间的
 航线。用例输入只有边而没有顶点数，边数。在用例代码中表示顶点也可以使用字符串来表示，更方便处理实际问题。
