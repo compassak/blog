@@ -2,6 +2,7 @@
 title: 'Java socket 通信流对象的选择'
 date: 2022-12-08T14:07:52+08:00
 draft: false
+categories: ["Socket"]
 tags:  ["Java", "socket", "Java IO"]
 ShowToc: true
 description: ""

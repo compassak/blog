@@ -1,16 +1,19 @@
 ---
 title: "Undigraph"
 date: 2020-07-09T12:02:02+08:00
-tags:  ["graph"]
+categories: ["Algorithm"]
+tags:  ["graph", "undigraph"]
 ---
-
-### <center>无向图</center>
 
 -图片资料来自 Algorithms, 4th Edition
 
-图：图是由一组顶点和一组能够将两个顶点相连的边组成。
 
-一般情况下为了和其他的图模型相互区别，又称图为无向图。在现实中的许多问题都可以抽象为一张图，结合优秀的算法，许多困难的问题都可以迎刃而解。
+
+图是由一组顶点和一组能够将两个顶点相连的边组成的逻辑结构，一般情况下为了和其他的图模型相互区别，又称图为无向图。在现实中的许多问题都可以抽象为一张图，结合优秀的算法，许多困难的问题都可以迎刃而解。
+
+
+
+
 
 #### 1. 术语表
 
@@ -34,6 +37,10 @@ tags:  ["graph"]
 | 稠密图| 很少的顶点对没有被连接|
 | 二分图| 顶点可分割为两个互不相交的子集，两个子集内的顶点不相邻|
 
+
+
+
+
 #### 2. 表示无向图数据类型
 
 **2.1 图的几种表示方法**
@@ -54,8 +61,7 @@ tags:  ["graph"]
 
 声明一个 Node 数组作为邻接表，在两个构造函数中完成对图的初始化，使用reader初始化图时，读取的文件头两行应为顶点数和边数。在添加一条边时，需要在两个顶点的邻接表中都加上对方的顶点结点。这样方便我们在实现 adj() 方法时可以简单高效的找出一个顶点的所有邻接顶点。
 
-Java
-```
+```java
 public class Graph {
     private final int V;    // 顶点数
     private int E;          // 边数
@@ -128,6 +134,10 @@ public class Graph {
 
 在上面的实现中，可能几个不同的邻接表对应同一幅图，这与边插入的顺序有关。而且在最后调用方法 adj() 获取所有邻接顶点时，使用的是 HashSet 存储顶点元素又会将元素的顺序打乱（按在HashSet中的存储位置顺序），此时元素的顺序就是算法处理它们的顺序。虽然顺序的差异不会对算法的正确性有影响。
 
+
+
+
+
 #### 3. 深度优先搜索
 
 深度优先搜索（DFS）是一种遍历连通图的算法，它算法的基本思路为：
@@ -142,8 +152,7 @@ public class Graph {
 
 可以说是非常的头铁了，给人一种到处乱串的感觉，一直走到相对于起点的最深处才罢休。它的基本实现如下（基于 Graph 数据类型）。
 
-Java
-```
+```java
 public class DepthFirstSearch {
     private boolean[] marked;   // 标记已访问过的顶点
     private int count;          // 与起点连通的结点数
@@ -203,7 +212,7 @@ public class DepthFirstSearch {
 
 在CC的实现中，使用一个int数组 id 来存储每一个顶点的连通分量id（初始化时对应的count），顶点号为数组索引，数组值为连通分量的id。根据id数组我们可以很快的确定两个顶点是否在一个连通分量中（是否连通，之间有路径）。每找到一个连通分量 count加1。具体实现如下。
 
-```
+```java
 public class CC {
     private boolean[] marked;   // 标记已访问过的顶点
     private int[] id;           // 顶点对应索引，值为连通分量的id
@@ -252,7 +261,7 @@ public class CC {
 
 在 Cycle 的实现中，增加了 dfs() 的参数 int u，也就是参数int v 的父顶点用于环判定。 
 
-```
+```java
 /**
  * 判断图中是否有环，假设不存在自环，平行环
  */
@@ -296,7 +305,7 @@ public class Cycle {
 
 在 TowColor 的实现中，使用一个int[] 的 color 记录每一个顶点的颜色。isTowColorable 默认为 true，遇到无法构成2分图的情况置为 false。
 
-```
+```java
 public class TowColor {
     private boolean[] marked;              // 标记已访问过的顶点
     private boolean[] color;               // 顶点颜色
@@ -338,7 +347,7 @@ public class TowColor {
 
 在DepthFirstPaths的实现中，基于DepthFirstSreach增加了 edgeTo[] 记录起点到各连通顶点的路径，它可以记录每一个顶点到起点的路径。为了做到这一点，在由边 v-w 第一次访问任意 w 时，将 edgeTo[w] 设为 v 来记住这条路径。edgeTo[v] 中又记录了上一个顶点，一直可以回溯到起点。这样在edgeTo[]中存储的就是一个以起点为根结点的树。通过连通的目标顶点我们总能找到一条指向起点的路径。具体实现如下。
 
-```
+```java
 public class DepthFirstPaths {
     private boolean[] marked;   // 标记已访问过的顶点
     private int[] edgeTo;       // 记录起点到各连通顶点的路径
@@ -427,7 +436,7 @@ public class DepthFirstPaths {
 dfp 0->6 : 0-5-3-4-6
 ```
 
-![test_case](https://gitee.com/compass-ak/images/raw/master/AKblog/Algorithm/graphs/test_case.png)
+{{< figure src="test_case.png" caption="test case graph" numbered="true" >}}
 
 <center>用例图示</center>
 
@@ -436,6 +445,10 @@ dfp 0->6 : 0-5-3-4-6
 但是仔细观察，我们会发现找顶点 ` 0->6 `的路径，可以直接可以从0到6啊？上文提到过，深度优先算法访问顶点的顺序是根据 Graph 的 adj() 方法返回的顶点顺序来的，然后在次用例中可能 5 比 6 先返回。导致绕了一大圈才找到6。
 
 而且上述要求对于深度优先算法太为苛刻，本来就没有这方面的功能属性。要解决这个问题也就是：单点最短路径问题（给定顶点到起点的最短路径）。需要使用另一个经典算法 _广度优先搜索_ 。
+
+
+
+
 
 #### 4. 广度优先搜索
 
@@ -547,11 +560,13 @@ bfp 0->6 : 0-6
 
 广度优先搜索与深度优先搜索的区别从下图中可以更明显的看出：
 
-![test_case](https://gitee.com/compass-ak/images/raw/master/AKblog/Algorithm/graphs/depth_breadth_diff.png)
+{{< figure src="depth_breadth_diff.png" caption="depth breadth different graph" numbered="true" >}}
 
 上图，显示了深度优先搜索和广度优先搜索处理含有250个顶点图的过程，左图为深度优先搜索，右图为广度优先搜索，它们清晰地展示了两种方法中搜索路径的不同。深度优先搜索不断深入图中并在栈中保存了所有分叉的顶点；广度优先搜索则像扇面一般扫描图，用一个队列保存访问过的最前端的顶点。深度优先搜索探索一幅图的方式是寻找离起点更远的顶点，只在碰到死胡同时才访问近处的顶点；广度优先搜索则会首先覆盖起点附近的顶点，只在临近的所有顶点都被访问了之后才向前进。
 
-#### 符号图
+
+
+#### 5. 符号图
 
 在图算法实际的应用中，处理的很多问题是从现实的问题中抽象出一幅图。图的顶点往往是用字符串代指的。而且不会像 Graph 接受的输入会预先告知顶点数边数。为了用图的算法去更好的处理实际问题，我们需要将使用数字顶点的图Graph 数据类型扩展成字符串代指顶点的图，而且会根据输入来自动确定定点数，边数。
 
@@ -650,7 +665,7 @@ LAS PHX
         //dfp test
         DepthFirstPaths dfp = new DepthFirstPaths(graph.getGraph(), graph.index(s));
         List<Integer> path1= dfp.pathTo(graph.index(v));
-        System.out.print("dfp "+ s +"->"+ s + " : " + s);
+        System.out.print("dfp "+ s +"->"+ v + " : " + s);
         for (int i = path1.size()-2; i >= 0; i--){
             System.out.print("-" + graph.name(path1.get(i)));
         }
@@ -658,7 +673,7 @@ LAS PHX
         //bfp test
         BreadthFirstPaths bfp = new BreadthFirstPaths(graph.getGraph(),  graph.index(s));
         List<Integer> path2 = bfp.pathTo(graph.index(v));
-        System.out.print("\nbfp "+ s +"->"+ s + " : " + s);
+        System.out.print("\nbfp "+ s +"->"+ v + " : " + s);
         for (int i = path2.size()-2; i >= 0; i--){
             System.out.print("-" + graph.name(path2.get(i)));
         }
@@ -668,10 +683,12 @@ LAS PHX
 6
 PHX
 ----------------------------------------------
-dfp JFK->JFK : JFK-MCO-HOU-ORD-DEN-PHX-LAX-LAS
-bfp JFK->JFK : JFK-ORD-DEN-LAS
+dfp JFK->LAS : JFK-MCO-HOU-ORD-DEN-PHX-LAX-LAS
+bfp JFK->LAS : JFK-ORD-DEN-LAS
 ```
-![](https://gitee.com/compass-ak/images/raw/master/AKblog/Algorithm/graphs/airport.png)
+
+
+{{< figure src="airport.png" caption="airport graph" numbered="true" >}}
 
 <center>用例图示</center>
 

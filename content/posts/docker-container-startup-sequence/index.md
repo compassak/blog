@@ -2,7 +2,8 @@
 title: 'Docker 容器启动顺序'
 date: 2023-09-08T14:07:52+08:00
 draft: false
-tags:  ["docker"]
+categories: ["Docker"]
+tags:  ["docker", "container", "docker-compose"]
 ShowToc: true
 description: ""
 author: ""

@@ -1,6 +1,7 @@
 ---
 title: "Merge-Sort"
 date: 2020-05-17T08:27:04+08:00
+categories: ["Algorithm"]
 tags:  ["sorting", "divide-and-conquer"]
 ---
 

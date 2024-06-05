@@ -1,6 +1,7 @@
 ---
 title: "Heap-Sort"
 date: 2020-05-19T08:27:04+08:00
+categories: ["Algorithm"]
 tags:  ["sorting", "heap"]
 ---
 
