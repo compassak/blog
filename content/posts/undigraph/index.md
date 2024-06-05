@@ -198,11 +198,11 @@ public class DepthFirstSearch {
 
 1. 计算一幅图的极大连通子图数(连通分量)
 
-2. 确定两个顶点是否连通（两个顶点间是否存在一条路径）。
+2. 确定两个顶点是否连通（两个顶点间是否存在一条路径）
 
-3. 判断一幅图是否存在环。
+3. 判断一幅图是否存在环
 
-4. 判断一幅图是不是二分图。
+4. 判断一幅图是不是二分图
 
 等等，图论中的许多问题都可以使用深度优先搜索来解决。只需要在经典的深度优先搜索上稍加修改（记录一下数据）即可。
 
@@ -436,9 +436,11 @@ public class DepthFirstPaths {
 dfp 0->6 : 0-5-3-4-6
 ```
 
-{{< figure src="test_case.png" caption="test case graph" numbered="true" >}}
 
-<center>用例图示</center>
+
+{{< figure src="test_case.png"  title="Test case of depth first paths." numbered="true" >}}
+
+
 
 直接看测试用例输入输出难以验证程序的正确性，根据上图我们可以观察到，使用 DepthFirstPaths 找到的顶点 ` 0->6 `的路径: `0-5-3-4-6`确实存在，程序是正确的。
 
@@ -474,7 +476,7 @@ BreadthFirstPaths 的 bfs() 方法中使用了一个 Queue 队列来存放遇到
 
 由于需要处理的边都存放在了队列，bfs() 方法就不需要使用递归来处理访问。BreadthFirstPaths 的具体实现如下。
 
-```
+```java
 public class BreadthFirstPaths {
     private boolean[] marked;   // 到达该顶点的最短路径是否已知
     private int[] edgeTo;       // 记录起点到各连通结点的最短路径
@@ -560,7 +562,11 @@ bfp 0->6 : 0-6
 
 广度优先搜索与深度优先搜索的区别从下图中可以更明显的看出：
 
-{{< figure src="depth_breadth_diff.png"  caption="depth breadth different" numbered="true" >}}
+
+
+{{< figure src="depth_breadth_diff.png"  title="Different between depth and breadth." numbered="true" >}}
+
+
 
 上图，显示了深度优先搜索和广度优先搜索处理含有250个顶点图的过程，左图为深度优先搜索，右图为广度优先搜索，它们清晰地展示了两种方法中搜索路径的不同。深度优先搜索不断深入图中并在栈中保存了所有分叉的顶点；广度优先搜索则像扇面一般扫描图，用一个队列保存访问过的最前端的顶点。深度优先搜索探索一幅图的方式是寻找离起点更远的顶点，只在碰到死胡同时才访问近处的顶点；广度优先搜索则会首先覆盖起点附近的顶点，只在临近的所有顶点都被访问了之后才向前进。
 
@@ -574,7 +580,7 @@ bfp 0->6 : 0-6
 
 HashMap 正向索引值为上一次元素添加后 HashMap 的元素数量。SymbolGraph 符号图的具体实现如下。
 
-```
+```java
 public class SymbolGraph {
     private HashMap<String, Integer> map;   // 符号名 -> 索引
     private String[] keys;                  // 索引 -> 符号名
@@ -688,7 +694,7 @@ bfp JFK->LAS : JFK-ORD-DEN-LAS
 ```
 
 
-{{< figure src="airport.png" caption="airport"  numbered="true" >}}
+{{< figure src="airport.png"  title="Map of American aircraft routes."  numbered="true" >}}
 
 
 
