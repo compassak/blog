@@ -2,16 +2,12 @@
 title: "Undigraph"
 date: 2020-07-09T12:02:02+08:00
 categories: ["Algorithm"]
-tags:  ["graph", "undigraph"]
+tags:  ["graph", "undigraph", "DFS", "BFS"]
 ---
-
--图片资料来自 Algorithms, 4th Edition
 
 
 
 图是由一组顶点和一组能够将两个顶点相连的边组成的逻辑结构，一般情况下为了和其他的图模型相互区别，又称图为无向图。在现实中的许多问题都可以抽象为一张图，结合优秀的算法，许多困难的问题都可以迎刃而解。
-
-
 
 
 
@@ -438,7 +434,7 @@ dfp 0->6 : 0-5-3-4-6
 
 
 
-{{< figure src="test_case.png"  title="Test case of depth first paths." numbered="true" >}}
+{{< figure src="test_case.png"  title="深度优先搜索测试用例" numbered="true" >}}
 
 
 
@@ -564,7 +560,7 @@ bfp 0->6 : 0-6
 
 
 
-{{< figure src="depth_breadth_diff.png"  title="Different between depth and breadth." numbered="true" >}}
+{{< figure src="depth_breadth_diff.png"  title="深度优先和广度优先区别" numbered="true" >}}
 
 
 
@@ -694,7 +690,7 @@ bfp JFK->LAS : JFK-ORD-DEN-LAS
 ```
 
 
-{{< figure src="airport.png"  title="Map of American aircraft routes."  numbered="true" >}}
+{{< figure src="airport.png"  title="美国机场航线图"  numbered="true" >}}
 
 
 
@@ -702,3 +698,6 @@ bfp JFK->LAS : JFK-ORD-DEN-LAS
 航线。用例输入只有边而没有顶点数，边数。在用例代码中表示顶点也可以使用字符串来表示，更方便处理实际问题。
 
 根据虚线上的输出可以发现正向索引与反向索引对应良好。在虚线输出后分别使用了深度优先搜索，广度优先搜索，查询 `JFK -> LAS` 间的路径。深度优先搜索还是一如既往的头铁，找出了一条非常长的路径。而广度优先搜索则是不负众望找到了一条通过定点数最少的路径之一。
+
+
+-图片资料来自 Algorithms, 4th Edition
