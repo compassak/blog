@@ -1,6 +1,6 @@
 ---
 title: "Binary-Search-Tree"
-date: 2020-06-12T08:27:04+08:00
+date: 2020-06-14T08:27:04+08:00
 tags:  ["searching", "bintree"]
 ---
 
