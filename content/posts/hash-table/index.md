@@ -1,5 +1,5 @@
 ---
-title: "Hash-Tables"
+title: "Hash-Table"
 date: 2020-07-06T18:12:57+08:00
 tags:  ["searching"]
 ---

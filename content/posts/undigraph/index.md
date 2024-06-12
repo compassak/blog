@@ -3,6 +3,9 @@ title: "Undigraph"
 date: 2020-07-09T12:02:02+08:00
 categories: ["Algorithm"]
 tags:  ["graph", "undigraph", "DFS", "BFS"]
+
+# featured posts are shown on the homepage
+featured: true
 ---
 
 
@@ -700,4 +703,8 @@ bfp JFK->LAS : JFK-ORD-DEN-LAS
 根据虚线上的输出可以发现正向索引与反向索引对应良好。在虚线输出后分别使用了深度优先搜索，广度优先搜索，查询 `JFK -> LAS` 间的路径。深度优先搜索还是一如既往的头铁，找出了一条非常长的路径。而广度优先搜索则是不负众望找到了一条通过定点数最少的路径之一。
 
 
--图片资料来自 Algorithms, 4th Edition
+图片资料来自：
+
+1. Algorithms (4th Edition)
+
+

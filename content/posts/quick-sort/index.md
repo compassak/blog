@@ -3,6 +3,9 @@ title: "Quick-Sort"
 date: 2020-05-18T08:27:04+08:00
 categories: ["Algorithm"]
 tags:  ["sorting", "divide-and-conquer"]
+
+# featured posts are shown on the homepage
+featured: true
 ---
 
 
@@ -145,3 +148,12 @@ public class Quick3way {
 ```
 
 Dijkstra 的解法如上所示。它从左到右遍历数组一次，维护一个指针 lt 使得 a[lo..lt-1] 中的元素都小于 v，一个指针 gt 使得 a[gt+1..hi] 中的元素都大于 v，一个指针 i 使得 a[lt..i-1] 中的元素都等于 v， a[i..gt] 中的元素都还未确定。直到while循环完成后，就达到了a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]成立的效果。 **对于存在大量重复元素的数组，这种方法比标准的快速排序的效率高得多**
+
+
+
+
+图片资料来自：
+
+1. Algorithms (4th Edition)
+
+2. [GeeksforGeeks](www.geeksforgeeks.org)

@@ -3,6 +3,9 @@ title: "Digraph"
 date: 2020-07-18T09:23:35+08:00
 categories: ["Algorithm"]
 tags:  ["graph", "digraph", "topological", "DFS", "BFS"]
+
+# featured posts are shown on the homepage
+featured: true
 ---
 
 
@@ -484,4 +487,7 @@ Kosaraju 算法的实现很简单，但是其正确性很难直观的看出来�
 
 
 
--图片资料来自 Algorithms, 4th Edition
+图片资料来自：
+
+1. Algorithms (4th Edition)
+

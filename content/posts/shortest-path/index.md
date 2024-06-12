@@ -1,20 +1,17 @@
 ---
-title: "Shortest Path"
+title: "Shortest-Path"
 date: 2020-07-24T19:03:39+08:00
-tags:  ["graph"]
+tags:  ["graph", "digraph", "shortest", "path"]
 
-# featured posts are shown on the homepage
-featured: true
-draft: false
 ---
 
 
 
-### <center>最短路径</center>
-
 在简单的无向图模型中，我们使用 _广度优先搜索_ 可以找到一个顶点到另一个顶点的最短路径（含顶点最少）。但是在加权图中情况有了很大的不同，需要考虑边的权重，这也更贴合许多实际问题。在加权图中的最短路径又可以理解为：找到从一个顶点到达另一个顶点的成本最小的路径。
 
 为了能够解决更多的实际问题，方便提取问题的抽象模型。我们讨论最短路径基于的图模型一定要具有一般性，考虑更多的变量。也就是加权有向图模型，每一条路径都是有向的，而且有一个和路径关联的权重。
+
+
 
 #### 1. 加权有向图数据结构
 

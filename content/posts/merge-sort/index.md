@@ -160,3 +160,12 @@ public class Merge {
 **缺点**
 
 1. 需要辅助数组，空间复杂度为O(n),在同类效率类似的算法中归并排序的空间复杂度略高。
+
+
+
+
+图片资料来自：
+
+1. Algorithms (4th Edition)
+
+2. [GeeksforGeeks](www.geeksforgeeks.org)

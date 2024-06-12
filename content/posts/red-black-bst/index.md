@@ -366,9 +366,6 @@ public class RedBlackBST {
 |2-3 树查找（红黑树）| 2lgN |2lgN |1.00lgN| 1.00lgN|
 
 
--图片资料来自 Algorithms, 4th Edition
-
-
-
+> 图片资料来自 Algorithms (4th Edition)
 
 

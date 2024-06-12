@@ -1,6 +1,7 @@
 ---
 title: "Binary-Search"
 date: 2020-06-14T08:27:04+08:00
+
 tags:  ["searching"]
 ---
 
