@@ -487,6 +487,7 @@ Kosaraju 算法的实现很简单，但是其正确性很难直观的看出来�
 
 
 
+<br><br><br>
 图片资料来自：
 
 1. Algorithms (4th Edition)

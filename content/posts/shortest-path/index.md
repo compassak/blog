@@ -534,3 +534,11 @@ Bellman-Ford 算法的实现修改了 relax() 方法，将被成功放松的边�
 |Dijkstra 算法（即时版本）| 边的权重必须为正| ElogV| ElogV| V |最坏情况下仍有较好的性能|
 |拓扑排序法 | 只适用于无环加权有向图| E+V| E+V| V| 是无环图中的最优算法|
 |Bellman-Ford算法（基于队列）| 不能存在负权重环| E+V| VE| V| 适用领域广泛|
+
+
+
+
+<br><br><br>
+图片资料来自：
+
+1. Algorithms (4th Edition)
