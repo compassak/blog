@@ -4,6 +4,7 @@ title: COMPASSAK
 theme: hugo-northeast
 enableGitInfo: true
 relativeURLs: true
+timeout: 60
 
 # Google Analytics
 googleAnalytics: G-C4XDCLZQ75
