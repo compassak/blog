@@ -2,7 +2,7 @@
 title: "Red-Black-BST"
 date: 2020-06-14T08:27:04+08:00
 categories: ["Algorithm"]
-tags:  ["searching", "btree", "Red-black tree"]
+tags:  ["searching", "btree", "red-black-bst"]
 
 # featured posts are shown on the homepage
 featured: true
