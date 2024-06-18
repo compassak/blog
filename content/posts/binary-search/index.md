@@ -2,7 +2,7 @@
 title: "Binary-Search"
 date: 2020-06-12T08:27:04+08:00
 categories: ["Algorithm"]
-tags:  ["search", "binary-search"]
+tags:  ["searching", "binary-search"]
 ---
 
 

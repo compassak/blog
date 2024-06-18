@@ -2,7 +2,7 @@
 title: "Binary-Search-Tree"
 date: 2020-06-14T08:27:04+08:00
 categories: ["Algorithm"]
-tags:  ["search", "binary-search", "BST"]
+tags:  ["searching", "binary-search", "BST"]
 ---
 
 
