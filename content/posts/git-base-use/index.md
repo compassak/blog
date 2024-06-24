@@ -136,7 +136,9 @@ tags:  ["git","vision control"]
 
 1. merge branch-a 的含义就是是讲 branch-a 分支的内容合并到当前分支，也就是说：使用 merge 合并分支，需要事先切换到需要合并其他分支的分支，而rebase 命令不需要，而且在不同的分支合并会产生顺序不同的提交记录
 
-2. 例如当前有两个分支：mian 和 dev。dev 分支是以   mian 分支的之前的某一个版本创建的，创建后 main  分支和 dev 分支都有新的提交，在两个分支执行合并另一个分支的效果如下![image-20240108232658434](https://cloud.compassak.top/s/8e5JKBJtbLd5E65/preview)
+2. 例如当前有两个分支：mian 和 dev。dev 分支是以   mian 分支的之前的某一个版本创建的，创建后 main  分支和 dev 分支都有新的提交，在两个分支执行合并另一个分支的效果如下
+
+   {{< figure src="git_rebase.png"  title="git rebase" numbered="true" >}}
 
    可以见 rebase 的效果是：以目标分支为基础，将当前分支，从两个分支共同祖先（mian:3）开始的所有提交，添加到目标分支的最新提交之后，最后合并的结果是一条直线（一个分支），而 merge 则是保留了 原分支的提交记录，合并历史
 
@@ -162,4 +164,4 @@ tags:  ["git","vision control"]
 
 ### 8. git flow 工作流模型
 
-![20191230121237197](https://cloud.compassak.top/s/AybCJZ5DKRMb4DM/preview)
+{{< figure src="git_flow.png"  title="工作流模型" numbered="true" >}}
