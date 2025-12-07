@@ -565,6 +565,7 @@ a.post-card {
     padding: 20px 20px 30px;
     margin: -20px -20px 0 -20px;
     width: calc(100% + 40px);
+    box-sizing: border-box;
 }
 
 
@@ -574,6 +575,7 @@ a.post-card {
     z-index: 10;
     text-align: center;
     max-width: 800px;
+    margin: 0 auto;
     padding: 0 20px;
 }
 
@@ -680,8 +682,16 @@ a.post-card {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+    .header-inner {
+        padding: 0 16px;
+    }
+
+    .posts-grid-container {
+        padding: 0;
+    }
+
     .hero-section {
-        min-height: 50vh;
+        min-height: auto;
         padding: 40px 20px;
     }
 
