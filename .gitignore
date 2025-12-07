@@ -3,4 +3,3 @@
 /.idea
 .hugo_build.lock
 node_modules
-/themes

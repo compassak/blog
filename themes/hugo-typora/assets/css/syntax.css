@@ -1,0 +1,336 @@
+/* Xcode Default Dark Syntax Highlighting (Applied Globally) */
+
+/* Base overrides for Xcode Dark to ensure it hits everywhere */
+.bg {
+    color: #ffffff !important;
+    background-color: #1f1f24 !important;
+}
+
+.chroma {
+    color: #ffffff !important;
+    background-color: #1f1f24 !important;
+}
+
+/* Ensure syntax colors are applied */
+.chroma .x {}
+
+.chroma .err {
+    color: #960050
+}
+
+.chroma .cl {}
+
+.chroma .lnlinks {
+    outline: none;
+    text-decoration: none;
+    color: inherit
+}
+
+.chroma .lntd {
+    vertical-align: top;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.chroma .lntable {
+    border-spacing: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.chroma .hl {
+    background-color: #ffffcc
+}
+
+.chroma .lnt {
+    white-space: pre;
+    -webkit-user-select: none;
+    user-select: none;
+    margin-right: 0.4em;
+    padding: 0 0.4em 0 0.4em;
+    color: #7f7f7f
+}
+
+.chroma .ln {
+    white-space: pre;
+    -webkit-user-select: none;
+    user-select: none;
+    margin-right: 0.4em;
+    padding: 0 0.4em 0 0.4em;
+    color: #7f7f7f
+}
+
+.chroma .line {
+    display: flex;
+}
+
+.chroma .k {
+    color: #fc5fa3
+}
+
+.chroma .kc {
+    color: #fc5fa3
+}
+
+.chroma .kd {
+    color: #fc5fa3
+}
+
+.chroma .kn {
+    color: #fc5fa3
+}
+
+.chroma .kp {
+    color: #fc5fa3
+}
+
+.chroma .kr {
+    color: #fc5fa3
+}
+
+.chroma .kt {
+    color: #fc5fa3
+}
+
+.chroma .n {}
+
+.chroma .na {}
+
+.chroma .nb {
+    color: #d0a8ff
+}
+
+.chroma .bp {
+    color: #a167e6
+}
+
+.chroma .nc {
+    color: #5dd8ff
+}
+
+.chroma .no {}
+
+.chroma .nd {}
+
+.chroma .ni {}
+
+.chroma .ne {}
+
+.chroma .nf {
+    color: #41a1c0
+}
+
+.chroma .fm {}
+
+.chroma .nl {}
+
+.chroma .nn {}
+
+.chroma .nx {}
+
+.chroma .py {}
+
+.chroma .nt {}
+
+.chroma .nv {
+    color: #41a1c0
+}
+
+.chroma .vc {}
+
+.chroma .vg {}
+
+.chroma .vi {}
+
+.chroma .vm {}
+
+.chroma .l {}
+
+.chroma .ld {}
+
+.chroma .s {
+    color: #fc6a5d
+}
+
+.chroma .sa {
+    color: #fc6a5d
+}
+
+.chroma .sb {
+    color: #fc6a5d
+}
+
+.chroma .sc {
+    color: #fc6a5d
+}
+
+.chroma .dl {
+    color: #fc6a5d
+}
+
+.chroma .sd {
+    color: #fc6a5d
+}
+
+.chroma .s2 {
+    color: #fc6a5d
+}
+
+.chroma .se {
+    color: #fc6a5d
+}
+
+.chroma .sh {
+    color: #fc6a5d
+}
+
+.chroma .si {}
+
+.chroma .sx {
+    color: #fc6a5d
+}
+
+.chroma .sr {
+    color: #fc6a5d
+}
+
+.chroma .s1 {
+    color: #fc6a5d
+}
+
+.chroma .ss {
+    color: #fc6a5d
+}
+
+.chroma .m {
+    color: #d0bf69
+}
+
+.chroma .mb {
+    color: #d0bf69
+}
+
+.chroma .mf {
+    color: #d0bf69
+}
+
+.chroma .mh {
+    color: #d0bf69
+}
+
+.chroma .mi {
+    color: #d0bf69
+}
+
+.chroma .il {
+    color: #d0bf69
+}
+
+.chroma .mo {
+    color: #d0bf69
+}
+
+.chroma .o {}
+
+.chroma .ow {}
+
+.chroma .p {}
+
+.chroma .c {
+    color: #6c7986
+}
+
+.chroma .ch {
+    color: #6c7986
+}
+
+.chroma .cm {
+    color: #6c7986
+}
+
+.chroma .c1 {
+    color: #6c7986
+}
+
+.chroma .cs {
+    color: #6c7986;
+    font-style: italic
+}
+
+.chroma .cp {
+    color: #fd8f3f
+}
+
+.chroma .cpf {
+    color: #fd8f3f
+}
+
+.chroma .g {}
+
+.chroma .gd {}
+
+.chroma .ge {}
+
+.chroma .gr {}
+
+.chroma .gh {}
+
+.chroma .gi {}
+
+.chroma .go {}
+
+.chroma .gp {}
+
+.chroma .gs {}
+
+.chroma .gu {}
+
+.chroma .gt {}
+
+.chroma .gl {}
+
+.chroma .w {}
+
+/* Core Code Block Structure Tweaks */
+.chroma {
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 1em;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+}
+
+/* Fix for Chroma tables picking up global table styles (White Blocks Fix) */
+.chroma table,
+.chroma tr,
+.chroma td,
+.chroma th {
+    background-color: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-spacing: 0 !important;
+    border-collapse: collapse !important;
+}
+
+/* 
+   AGGRESSIVE LINE NUMBER HIDING 
+   placed at the very end to override everything else
+*/
+.lntd:first-child code,
+.lntd:first-child pre,
+.lnt,
+.ln,
+.lnlinks,
+span.ln {
+    display: none !important;
+}
+
+/* Ensure table cells for line numbers are collapsed if they exist */
+.lntd:first-child {
+    width: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}

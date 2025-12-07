@@ -1,0 +1,23 @@
+<header class="site-header">
+    <div class="container page-home">
+        <div class="header-inner">
+            <div class="site-branding">
+                <a href="{{ .Site.BaseURL }}" class="site-logo-link">
+                    {{ $logo := resources.Get "images/logo.png" }}
+                    {{ if $logo }}
+                    <img src="{{ $logo.RelPermalink }}" alt="{{ .Site.Title }}" class="site-logo">
+                    {{ end }}
+                    <span class="site-title">{{ .Site.Title }}</span>
+                </a>
+            </div>
+            {{ with .Site.Params.hero.rss }}
+            <nav class="header-nav">
+                <a href="{{ $.Site.BaseURL }}index.xml" class="header-rss-link" title="订阅 RSS">
+                    <i class="fa-solid fa-rss"></i>
+                    <span>RSS</span>
+                </a>
+            </nav>
+            {{ end }}
+        </div>
+    </div>
+</header>

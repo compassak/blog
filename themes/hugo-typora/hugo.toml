@@ -1,0 +1,19 @@
+baseURL = "http://example.org/"
+languageCode = "en-us"
+title = "Hugo Typora Theme"
+theme = "hugo-typora"
+
+# Core: Allow unsafe HTML for maximum Markdown flexibility (Typora-like)
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+# Core: Chroma Highlighting (GitHub Style)
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = false
+    style = "github"
+    noClasses = false  # set to false to use stylesheet for better dark mode support if needed, or true for inline styles. 
+                       # For dark mode switch, classes are better.

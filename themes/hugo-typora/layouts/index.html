@@ -1,0 +1,46 @@
+{{ define "main" }}
+<div class="homepage-wrapper">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">
+                {{ with .Site.Params.hero.title }}{{ . | safeHTML }}{{ else }} title {{ end }}
+            </h1>
+            <p class="hero-description">
+                {{ with .Site.Params.hero.description }}{{ . }}{{ else }}description{{ end }}
+            </p>
+        </div>
+    </section>
+
+    <!-- Recent Posts Grid -->
+    <section id="posts-grid" class="posts-grid-container">
+        <div class="posts-grid">
+            {{ range first 20 .Site.RegularPages }}
+            <a href="{{ .RelPermalink }}" class="post-card">
+                {{ $img := (.Resources.ByType "image").GetMatch "*featured*" }}
+                {{ with $img }}
+                <div class="post-card-image">
+                    <img src="{{ .RelPermalink }}" alt="{{ $.Title }}">
+                </div>
+                {{ end }}
+                <div class="post-card-content">
+                    <div class="post-card-meta">
+                        <span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
+                        {{ with .Params.categories }}
+                        <span class="post-category">{{ index . 0 }}</span>
+                        {{ end }}
+                    </div>
+                    <h3 class="post-card-title">{{ .Title }}</h3>
+                    <p class="post-card-summary">{{ .Summary | truncate 100 }}</p>
+                    <span class="read-more">Read more &rarr;</span>
+                </div>
+            </a>
+            {{ end }}
+        </div>
+    </section>
+</div>
+{{ end }}

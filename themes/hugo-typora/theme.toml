@@ -1,0 +1,12 @@
+name = "Hugo-Typora"
+license = "MIT"
+licenselink = "https://github.com/yourname/hugo-typora/blob/master/LICENSE"
+description = "A minimal Hugo theme replicating the Typora writing experience."
+homepage = "https://github.com/yourname/hugo-typora"
+tags = ["minimal", "clean", "typora", "blog", "responsive"]
+features = ["blog", "minimalist"]
+min_version = "0.110.0"
+
+[author]
+  name = "Antigravity"
+  homepage = ""

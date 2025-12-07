@@ -1,7 +1,7 @@
 baseURL: https://www.compassak.top/
 languageCode: zh-CN
-title: COMPASSAK
-theme: hugo-northeast
+title: OMPASSAK
+theme: hugo-typora
 enableGitInfo: true
 relativeURLs: true
 timeout: 60
@@ -43,3 +43,11 @@ outputFormats:
     baseName: minisearch
     isPlainText: true
     notAlternative: true
+
+# Site Parameters
+params:
+  # Hero Section Configuration
+  hero:
+    title: "COMPASSAK"                    # 主标题 (支持 HTML)
+    description: "It's not possible. No, it's necessary."
+    rss: true                                      # 是否显示 RSS 订阅按钮
