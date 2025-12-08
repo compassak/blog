@@ -401,5 +401,5 @@ Kruskal 算法执行的时间在表达式上与 延时实现的 LazyPrimMST 相�
 
 1. Algorithms (4th Edition)
 
-2. [GeeksforGeeks](www.geeksforgeeks.org)
+2. [GeeksforGeeks](https://www.geeksforgeeks.org)
 

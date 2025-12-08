@@ -314,4 +314,4 @@ public class LinearProbingHashST {
 
 1. Algorithms (4th Edition)
 
-2. [GeeksforGeeks](www.geeksforgeeks.org)
+2. [GeeksforGeeks](https://www.geeksforgeeks.org)

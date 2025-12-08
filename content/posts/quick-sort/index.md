@@ -157,4 +157,4 @@ Dijkstra 的解法如上所示。它从左到右遍历数组一次，维护一�
 
 1. Algorithms (4th Edition)
 
-2. [GeeksforGeeks](www.geeksforgeeks.org)
+2. [GeeksforGeeks](https://www.geeksforgeeks.org)
