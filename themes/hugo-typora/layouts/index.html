@@ -43,171 +43,167 @@
     </section>
 </div>
 
-<!-- Three.js Particle Effect -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<!-- Canvas 2D Particle Effect -->
 <script>
     (function () {
-        let scene, camera, renderer, particles, particleSystem;
-        const particleCount = 5000;
-        const mouse = new THREE.Vector2(9999, 9999);
-        const velocities = [];
-        const positions = [];
+        const container = document.getElementById('particle-container');
+        if (!container) return;
 
-        init();
-        animate();
+        const canvas = document.createElement('canvas');
+        canvas.id = 'particle-canvas';
+        container.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
 
-        function init() {
-            scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0xffffff, 0.001);
-            scene.background = new THREE.Color(0xffffff);
+        let width, height;
+        let particles = [];
 
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 2000);
-            camera.position.z = 1000;
+        // 配置参数
+        const config = {
+            count: 1200,
+            colorActive: {r: 66, g: 133, b: 244},
+            colorDormant: {r: 80, g: 80, b: 80},
+            thicknessDormant: 1.8,
+            thicknessActive: 3.8,
+            lengthStretch: 4.0,
+            baseRadius: 200,
+            ringThickness: 300,
+            breathSpeed: 0.002,
+            breathAmp: 80,
+            distortionStrength: 60,
+            distortionFreq: 4.0,
+            mouseLag: 0.05,
+            particleLerp: 0.08
+        };
 
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        let targetMouse = { x: -1000, y: -1000 };
+        let renderMouse = { x: -1000, y: -1000 };
+        let time = 0;
 
-            const container = document.getElementById('particle-container');
-            if (container) {
-                container.appendChild(renderer.domElement);
-            }
-
-            createParticleSystem();
-
-            window.addEventListener('resize', onWindowResize);
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('touchmove', onTouchMove, { passive: false });
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
 
-        function createParticleSystem() {
-            const geometry = new THREE.BufferGeometry();
+        function lerp(start, end, amt) {
+            return start * (1 - amt) + end * amt;
+        }
 
-            for (let i = 0; i < particleCount; i++) {
-                const x = (Math.random() - 0.5) * 2000;
-                const y = (Math.random() - 0.5) * 2000;
-                const z = (Math.random() - 0.5) * 2000;
-                positions.push(x, y, z);
+        function noise1D(x) {
+            return Math.sin(x) * 0.5 + Math.sin(x * 2.3) * 0.25 + Math.sin(x * 4.7) * 0.125;
+        }
 
-                velocities.push(
-                    (Math.random() - 0.5) * 0.2,
-                    (Math.random() - 0.5) * 0.2,
-                    (Math.random() - 0.5) * 0.2
-                );
+        class Particle {
+            constructor() {
+                this.baseX = Math.random() * width;
+                this.baseY = Math.random() * height;
+                this.currentX = this.baseX;
+                this.currentY = this.baseY;
+                this.intensity = 0;
+                this.layerOffset = Math.random() * config.ringThickness;
             }
 
-            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            update() {
+                const dxBase = this.baseX - renderMouse.x;
+                const dyBase = this.baseY - renderMouse.y;
+                const distBase = Math.sqrt(dxBase * dxBase + dyBase * dyBase);
+                const angleBase = Math.atan2(dyBase, dxBase);
 
-            const material = new THREE.PointsMaterial({
-                color: 0x444444,
-                size: 4,
-                transparent: true,
-                opacity: 0.6,
-                map: new THREE.TextureLoader().load('https://threejs.org/examples/textures/sprites/disc.png'),
-                sizeAttenuation: true
-            });
+                const breath = Math.sin(time * config.breathSpeed) * config.breathAmp;
+                const distortion = noise1D(angleBase * config.distortionFreq + time * 0.001) * config.distortionStrength;
+                const currentBaseRadius = config.baseRadius + breath + distortion;
 
-            particleSystem = new THREE.Points(geometry, material);
-            scene.add(particleSystem);
+                let targetX = this.baseX;
+                let targetY = this.baseY;
+                let targetIntensity = 0;
+
+                const maxTriggerRadius = currentBaseRadius + config.ringThickness;
+
+                if (distBase < maxTriggerRadius) {
+                    const myTargetRadius = currentBaseRadius + this.layerOffset;
+                    const moveDist = myTargetRadius - distBase;
+                    
+                    targetX = this.baseX + Math.cos(angleBase) * moveDist;
+                    targetY = this.baseY + Math.sin(angleBase) * moveDist;
+                    
+                    targetIntensity = 1 - (distBase / maxTriggerRadius);
+                    targetIntensity = Math.pow(targetIntensity, 0.5);
+                    
+                    if (targetIntensity < 0.8) targetIntensity = 0.8 + Math.random() * 0.2;
+                }
+
+                this.currentX = lerp(this.currentX, targetX, config.particleLerp);
+                this.currentY = lerp(this.currentY, targetY, config.particleLerp);
+                this.intensity = lerp(this.intensity, targetIntensity, config.particleLerp);
+
+                this.angle = Math.atan2(renderMouse.y - this.currentY, renderMouse.x - this.currentX);
+
+                const r = Math.floor(config.colorDormant.r + (config.colorActive.r - config.colorDormant.r) * this.intensity);
+                const g = Math.floor(config.colorDormant.g + (config.colorActive.g - config.colorDormant.g) * this.intensity);
+                const b = Math.floor(config.colorDormant.b + (config.colorActive.b - config.colorDormant.b) * this.intensity);
+                const alpha = 0.6 + 0.4 * this.intensity;
+
+                this.color = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                this.thickness = config.thicknessDormant + (config.thicknessActive - config.thicknessDormant) * this.intensity;
+                this.length = config.lengthStretch * this.intensity;
+            }
+
+            draw() {
+                if (this.currentX < -50 || this.currentX > width + 50 || 
+                    this.currentY < -50 || this.currentY > height + 50) return;
+
+                ctx.save();
+                ctx.translate(this.currentX, this.currentY);
+                ctx.rotate(this.angle);
+                
+                ctx.beginPath();
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = this.thickness;
+                ctx.lineCap = 'round';
+                
+                ctx.moveTo(-this.length / 2, 0);
+                ctx.lineTo(this.length / 2, 0);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+        }
+
+        function init() {
+            resize();
+            particles = [];
+            for (let i = 0; i < config.count; i++) {
+                particles.push(new Particle());
+            }
         }
 
         function animate() {
+            ctx.clearRect(0, 0, width, height);
+            time = Date.now();
+            renderMouse.x = lerp(renderMouse.x, targetMouse.x, config.mouseLag);
+            renderMouse.y = lerp(renderMouse.y, targetMouse.y, config.mouseLag);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
             requestAnimationFrame(animate);
-            render();
         }
 
-        function render() {
-            const positionsArray = particleSystem.geometry.attributes.position.array;
-            const time = Date.now() * 0.0005;
+        document.addEventListener('mousemove', e => {
+            targetMouse.x = e.clientX;
+            targetMouse.y = e.clientY;
+        });
+        document.addEventListener('mouseleave', () => {
+            targetMouse.x = -2000;
+            targetMouse.y = -2000;
+        });
+        window.addEventListener('resize', () => {
+            resize();
+            init();
+        });
 
-            for (let i = 0; i < particleCount; i++) {
-                const index = i * 3;
-                let px = positionsArray[index];
-                let py = positionsArray[index + 1];
-                let pz = positionsArray[index + 2];
-
-                let vx = velocities[index];
-                let vy = velocities[index + 1];
-                let vz = velocities[index + 2];
-
-                vx += Math.sin(time + py * 0.01) * 0.005;
-                vy += Math.cos(time + px * 0.01) * 0.005;
-                vz += Math.sin(time + pz * 0.01) * 0.005;
-
-                const mouseVector = new THREE.Vector3(
-                    (mouse.x / window.innerWidth) * 2 - 1,
-                    -(mouse.y / window.innerHeight) * 2 + 1,
-                    0.5
-                );
-                mouseVector.unproject(camera);
-                const dir = mouseVector.sub(camera.position).normalize();
-                const distanceToCamera = -camera.position.z / dir.z;
-                const mousePosInWorld = camera.position.clone().add(dir.multiplyScalar(distanceToCamera));
-
-                const dx = px - mousePosInWorld.x;
-                const dy = py - mousePosInWorld.y;
-                const distSq = dx * dx + dy * dy;
-                const forceRadiusSq = 250 * 250;
-
-                if (distSq < forceRadiusSq) {
-                    const dist = Math.sqrt(distSq);
-                    const force = (forceRadiusSq - distSq) / forceRadiusSq;
-
-                    vx += (dx / dist) * force * 2.5;
-                    vy += (dy / dist) * force * 2.5;
-                    vz += (Math.random() - 0.5) * force * 1.5;
-                }
-
-                vx *= 0.98;
-                vy *= 0.98;
-                vz *= 0.98;
-
-                px += vx;
-                py += vy;
-                pz += vz;
-
-                const boundary = 1000;
-                if (px > boundary) px = -boundary;
-                if (px < -boundary) px = boundary;
-                if (py > boundary) py = -boundary;
-                if (py < -boundary) py = boundary;
-                if (pz > boundary) pz = -boundary;
-                if (pz < -boundary) pz = boundary;
-
-                positionsArray[index] = px;
-                positionsArray[index + 1] = py;
-                positionsArray[index + 2] = pz;
-                velocities[index] = vx;
-                velocities[index + 1] = vy;
-                velocities[index + 2] = vz;
-            }
-
-            particleSystem.geometry.attributes.position.needsUpdate = true;
-
-            particleSystem.rotation.y += 0.0005;
-            particleSystem.rotation.x += 0.0002;
-
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        function onMouseMove(event) {
-            mouse.x = event.clientX;
-            mouse.y = event.clientY;
-        }
-
-        function onTouchMove(event) {
-            if (event.touches.length > 0) {
-                mouse.x = event.touches[0].clientX;
-                mouse.y = event.touches[0].clientY;
-                event.preventDefault();
-            }
-        }
+        init();
+        animate();
     })();
 </script>
 
