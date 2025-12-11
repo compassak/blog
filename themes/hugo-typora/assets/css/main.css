@@ -6,7 +6,7 @@
     /* Light Mode (Github Style) */
     --bg-color: #ffffff;
     --text-color: #24292e;
-    --heading-color: #24292e;
+    --heading-color: #242d2e;
     --link-color: #0366d6;
     --code-bg: #0d1117;
     /* Dark background requested by user */
@@ -89,14 +89,23 @@ html {
 /* Header Styles */
 /* Header Styles */
 .site-header {
-    background-color: var(--bg-color);
-    /* Ensure opaque background */
-    padding: 16px 0;
+    background: transparent;
+    padding: 10px 0;
     margin-bottom: 30px;
+    border-bottom: 1px solid transparent;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Header scrolled state - opaque background */
+.site-header.scrolled {
+    background: var(--bg-color);
     border-bottom: 1px solid var(--border-color);
-    /* Divider line */
-    position: relative;
-    z-index: 10;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Reset padding for the container *inside* the header to avoid double padding */
@@ -469,21 +478,25 @@ ol {
 }
 
 .post-card {
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
     display: flex;
     flex-direction: column;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 -1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .post-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .post-card-image {
@@ -589,7 +602,7 @@ a.post-card {
     letter-spacing: -0.02em;
     border: none;
     padding: 0;
-    background: linear-gradient(135deg, var(--heading-color) 0%, var(--link-color) 100%);
+    background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

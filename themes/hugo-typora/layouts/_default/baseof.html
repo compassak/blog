@@ -32,6 +32,10 @@
 
     </div>
 
+    <!-- Header Scroll Effect -->
+    {{ $headerScroll := resources.Get "js/header-scroll.js" }}
+    <script src="{{ $headerScroll.RelPermalink }}"></script>
+
     <!-- TOC Active State Script -->
     {{ $toc := resources.Get "js/toc.js" }}
     <script src="{{ $toc.RelPermalink }}"></script>
