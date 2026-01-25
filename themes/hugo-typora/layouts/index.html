@@ -1,4 +1,4 @@
-{{ define "main" }}
+﻿{{ define "main" }}
 <div class="homepage-wrapper">
     <!-- Particle Effect Container (z-index: 0, below content) -->
     <div id="particle-container"></div>
@@ -43,166 +43,413 @@
     </section>
 </div>
 
-<!-- Canvas 2D Particle Effect -->
+<!-- Canvas 2D Ripple Effect -->
 <script>
     (function () {
         const container = document.getElementById('particle-container');
         if (!container) return;
 
         const canvas = document.createElement('canvas');
-        canvas.id = 'particle-canvas';
+        canvas.id = 'ripple-canvas';
         container.appendChild(canvas);
         const ctx = canvas.getContext('2d');
 
         let width, height;
-        let particles = [];
+        let ripples = [];
+        let mousePos = { x: -1000, y: -1000 };
 
         // 配置参数
         const config = {
-            count: 1200,
-            colorActive: {r: 66, g: 133, b: 244},
-            colorDormant: {r: 80, g: 80, b: 80},
-            thicknessDormant: 1.8,
-            thicknessActive: 3.8,
-            lengthStretch: 4.0,
-            baseRadius: 200,
-            ringThickness: 300,
-            breathSpeed: 0.002,
-            breathAmp: 80,
-            distortionStrength: 60,
-            distortionFreq: 4.0,
-            mouseLag: 0.05,
-            particleLerp: 0.08
+            maxRipples: 5,                  // 最大波纹数量
+            duration: 10000,                // 波纹生命周期（毫秒）- 10秒
+            ringWidth: 100,                 // 波纹环宽度
+            colors: {
+                primary: { r: 0, g: 153, b: 255 },    // #0099ff (主色)
+                secondary: { r: 0, g: 120, b: 220 }   // 稍深的蓝色
+            },
+            irregularity: 12,               // 不规则程度
+            glowIntensity: 25,              // 发光强度
+            maxAlpha: 0.6,                  // 最大透明度
+            // 生命周期阶段（总和为1）
+            expandPhase: 0.7,               // 扩散阶段占70%
+            holdPhase: 0.15,                // 边缘滞留阶段占15%（约1.5秒）
+            fadePhase: 0.15                 // 淡出阶段占15%
         };
 
-        let targetMouse = { x: -1000, y: -1000 };
-        let renderMouse = { x: -1000, y: -1000 };
-        let time = 0;
+        // 检测是否为移动端
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            config.autoTriggerInterval = 5000;  // 移动端延长触发间隔
+            config.ringWidth = 80;               // 减小环宽度
+        }
 
         function resize() {
-            width = canvas.width = window.innerWidth;
+            // 使用 documentElement.clientWidth 排除滚动条宽度，确保左右边界对称
+            // 高度使用 window.innerHeight 确保覆盖全屏（防止出现底部白条）
+            width = canvas.width = document.documentElement.clientWidth || document.body.clientWidth;
             height = canvas.height = window.innerHeight;
         }
 
-        function lerp(start, end, amt) {
-            return start * (1 - amt) + end * amt;
+        // 计算从某点到达所有四个边缘所需的最小半径
+        function getMaxRadius(x, y) {
+            // 需要到达四个边缘，取最大值
+            const distToLeft = x;
+            const distToRight = width - x;
+            const distToTop = y;
+            const distToBottom = height - y;
+
+            // 要让波纹触及所有四边，半径必须大于等于到最远边的距离
+            const maxDist = Math.max(distToLeft, distToRight, distToTop, distToBottom);
+
+            // 额外增加200px确保波纹完全覆盖边缘
+            return maxDist + config.ringWidth + 200;
         }
 
-        function noise1D(x) {
-            return Math.sin(x) * 0.5 + Math.sin(x * 2.3) * 0.25 + Math.sin(x * 4.7) * 0.125;
+        // 检测波纹是否已经完全超出屏幕
+        function isCompletelyOutside(x, y, innerRadius) {
+            const distToLeft = x;
+            const distToRight = width - x;
+            const distToTop = y;
+            const distToBottom = height - y;
+            const minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
+
+            return innerRadius > Math.max(width, height) + config.ringWidth;
         }
 
-        class Particle {
-            constructor() {
-                this.baseX = Math.random() * width;
-                this.baseY = Math.random() * height;
-                this.currentX = this.baseX;
-                this.currentY = this.baseY;
-                this.intensity = 0;
-                this.layerOffset = Math.random() * config.ringThickness;
+        // 波纹类
+        class Ripple {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.startTime = Date.now();
+                this.maxRadius = getMaxRadius(x, y);
+                this.seed = Math.random() * 1000;  // 用于不规则形状
             }
 
-            update() {
-                const dxBase = this.baseX - renderMouse.x;
-                const dyBase = this.baseY - renderMouse.y;
-                const distBase = Math.sqrt(dxBase * dxBase + dyBase * dyBase);
-                const angleBase = Math.atan2(dyBase, dxBase);
+            // 获取当前进度 (0-1)
+            getProgress() {
+                return Math.min((Date.now() - this.startTime) / config.duration, 1);
+            }
 
-                const breath = Math.sin(time * config.breathSpeed) * config.breathAmp;
-                const distortion = noise1D(angleBase * config.distortionFreq + time * 0.001) * config.distortionStrength;
-                const currentBaseRadius = config.baseRadius + breath + distortion;
+            // 检查是否已消亡
+            isDead() {
+                return this.getProgress() >= 1;
+            }
 
-                let targetX = this.baseX;
-                let targetY = this.baseY;
-                let targetIntensity = 0;
+            // 获取不规则半径偏移
+            getIrregularOffset(angle, time) {
+                const noise =
+                    Math.sin(angle * 3 + time * 0.002 + this.seed) * config.irregularity +
+                    Math.sin(angle * 5 - time * 0.0015 + this.seed * 2) * (config.irregularity * 0.6) +
+                    Math.sin(angle * 8 + time * 0.001) * (config.irregularity * 0.3);
+                return noise;
+            }
 
-                const maxTriggerRadius = currentBaseRadius + config.ringThickness;
+            // 创建不规则圆形路径（带边界限制）
+            // insets: {top, right, bottom, left} 四向内缩距离
+            // edgeDistortion: 边界扭曲强度（>0时会在边界处产生波浪效果）
+            createIrregularPath(baseRadius, time, clampToBounds = false, insets = { top: 0, right: 0, bottom: 0, left: 0 }, edgeDistortion = 0) {
+                const segments = 120; // 增加段数以使边缘波浪更平滑
+                const points = [];
+                for (let i = 0; i < segments; i++) {
+                    const angle = (i / segments) * Math.PI * 2;
+                    const offset = this.getIrregularOffset(angle, time);
+                    const r = Math.max(0, baseRadius + offset);
 
-                if (distBase < maxTriggerRadius) {
-                    const myTargetRadius = currentBaseRadius + this.layerOffset;
-                    const moveDist = myTargetRadius - distBase;
+                    let px = Math.cos(angle) * r;
+                    let py = Math.sin(angle) * r;
 
-                    targetX = this.baseX + Math.cos(angleBase) * moveDist;
-                    targetY = this.baseY + Math.sin(angleBase) * moveDist;
+                    // 如果启用边界限制，将超出边界的点压缩到边界上
+                    if (clampToBounds) {
+                        // 转换为绝对坐标
+                        const absX = this.x + px;
+                        const absY = this.y + py;
 
-                    targetIntensity = 1 - (distBase / maxTriggerRadius);
-                    targetIntensity = Math.pow(targetIntensity, 0.5);
+                        let clampedX = absX;
+                        let clampedY = absY;
+                        let isClamped = false;
 
-                    if (targetIntensity < 0.8) targetIntensity = 0.8 + Math.random() * 0.2;
+                        // 支持通过对象传入 insets，或单数值（兼容旧调用）
+                        const leftInset = typeof insets === 'number' ? insets : (insets.left || 0);
+                        const rightInset = typeof insets === 'number' ? insets : (insets.right || 0);
+                        const topInset = typeof insets === 'number' ? insets : (insets.top || 0);
+                        const bottomInset = typeof insets === 'number' ? insets : (insets.bottom || 0);
+
+                        const minX = leftInset;
+                        const maxX = width - rightInset;
+                        const minY = topInset;
+                        const maxY = height - bottomInset;
+
+                        if (absX < minX) { clampedX = minX; isClamped = true; }
+                        else if (absX > maxX) { clampedX = maxX; isClamped = true; }
+
+                        if (absY < minY) { clampedY = minY; isClamped = true; }
+                        else if (absY > maxY) { clampedY = maxY; isClamped = true; }
+
+                        // 如果发生了限制且需要扭曲
+                        if (isClamped && edgeDistortion > 0) {
+                            // 使用坐标作为噪点源，产生连续的波浪边
+                            const distortion = Math.sin((isClamped ? (absX + absY) : 0) * 0.02 + time * 0.005) * edgeDistortion;
+
+                            // 根据是哪个边被限制来施加扭曲
+                            if (Math.abs(clampedX - minX) < 1 || Math.abs(clampedX - maxX) < 1) clampedX += distortion;
+                            if (Math.abs(clampedY - minY) < 1 || Math.abs(clampedY - maxY) < 1) clampedY += distortion;
+                        } else {
+                            // 硬限制
+                            clampedX = Math.max(minX, Math.min(maxX, clampedX));
+                            clampedY = Math.max(minY, Math.min(maxY, clampedY));
+                        }
+
+                        // 转回相对坐标
+                        px = clampedX - this.x;
+                        py = clampedY - this.y;
+                    }
+
+                    points.push({ x: px, y: py });
                 }
-
-                this.currentX = lerp(this.currentX, targetX, config.particleLerp);
-                this.currentY = lerp(this.currentY, targetY, config.particleLerp);
-                this.intensity = lerp(this.intensity, targetIntensity, config.particleLerp);
-
-                this.angle = Math.atan2(renderMouse.y - this.currentY, renderMouse.x - this.currentX);
-
-                const r = Math.floor(config.colorDormant.r + (config.colorActive.r - config.colorDormant.r) * this.intensity);
-                const g = Math.floor(config.colorDormant.g + (config.colorActive.g - config.colorDormant.g) * this.intensity);
-                const b = Math.floor(config.colorDormant.b + (config.colorActive.b - config.colorDormant.b) * this.intensity);
-                const alpha = 0.6 + 0.4 * this.intensity;
-
-                this.color = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-                this.thickness = config.thicknessDormant + (config.thicknessActive - config.thicknessDormant) * this.intensity;
-                this.length = config.lengthStretch * this.intensity;
+                return points;
             }
+
 
             draw() {
-                if (this.currentX < -50 || this.currentX > width + 50 ||
-                    this.currentY < -50 || this.currentY > height + 50) return;
+                const progress = this.getProgress();
+                if (progress >= 1) return;
+
+                const time = Date.now();
+
+                // 新的三阶段生命周期
+                let outerRadius;
+                let alpha;
+
+                const { expandPhase, holdPhase, fadePhase, maxAlpha } = config;
+
+                if (progress < expandPhase) {
+                    // 阶段1：扩散阶段（0 - 70%）
+                    const expandProgress = progress / expandPhase;
+                    // 使用缓出效果
+                    const easeProgress = 1 - Math.pow(1 - expandProgress, 2);
+                    outerRadius = easeProgress * this.maxRadius;
+
+                    // 透明度：快速淡入后保持
+                    if (expandProgress < 0.1) {
+                        alpha = (expandProgress / 0.1) * maxAlpha;
+                    } else {
+                        alpha = maxAlpha;
+                    }
+                } else if (progress < expandPhase + holdPhase) {
+                    // 阶段2：边缘滞留阶段（70% - 85%）- 保持最大半径
+                    outerRadius = this.maxRadius;
+                    alpha = maxAlpha;
+                } else {
+                    // 阶段3：淡出阶段（85% - 100%）
+                    outerRadius = this.maxRadius;
+                    const fadeProgress = (progress - expandPhase - holdPhase) / fadePhase;
+                    alpha = maxAlpha * (1 - fadeProgress);
+                }
+
+                if (alpha < 0.01) return;
 
                 ctx.save();
-                ctx.translate(this.currentX, this.currentY);
-                ctx.rotate(this.angle);
 
+                const { primary, secondary } = config.colors;
+
+                ctx.translate(this.x, this.y);
+
+                const innerRadius = Math.max(0, outerRadius - config.ringWidth);
+
+                // 检测是否已碰到任一边界
+                const distToLeft = this.x;
+                const distToRight = width - this.x;
+                const distToTop = this.y;
+                const distToBottom = height - this.y;
+                const minDistToEdge = Math.min(distToLeft, distToRight, distToTop, distToBottom);
+                const isTouchingBoundary = outerRadius > minDistToEdge;
+
+                const isHitLeft = outerRadius > distToLeft;
+                const isHitRight = outerRadius > distToRight;
+                const isHitTop = outerRadius > distToTop;
+                const isHitBottom = outerRadius > distToBottom;
+
+                // 内圈：根据撞墙状态设置内缩
+                // 撞墙时，将内圈(空洞)向中心推远，使墙边区域变为实心(无空洞)，消除内边线
+                const pushBackDist = 50;
+                const normalInset = 80;
+
+                const innerInsets = {
+                    left: isHitLeft ? pushBackDist : normalInset,
+                    right: isHitRight ? pushBackDist : normalInset,
+                    top: isHitTop ? pushBackDist : normalInset,
+                    bottom: isHitBottom ? pushBackDist : normalInset
+                };
+
+                const outerPoints = this.createIrregularPath(outerRadius, time, true, 0, 0);
+                const innerPoints = this.createIrregularPath(innerRadius, time, true, innerInsets, 0);
+
+                // 绘制填充的环形波纹
                 ctx.beginPath();
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = this.thickness;
-                ctx.lineCap = 'round';
+                ctx.moveTo(outerPoints[0].x, outerPoints[0].y);
+                for (let i = 1; i < outerPoints.length; i++) ctx.lineTo(outerPoints[i].x, outerPoints[i].y);
+                ctx.closePath();
 
-                ctx.moveTo(-this.length / 2, 0);
-                ctx.lineTo(this.length / 2, 0);
-                ctx.stroke();
+                if (innerRadius > 0) {
+                    ctx.moveTo(innerPoints[0].x, innerPoints[0].y);
+                    for (let i = innerPoints.length - 1; i >= 0; i--) ctx.lineTo(innerPoints[i].x, innerPoints[i].y);
+                    ctx.closePath();
+                }
+
+                // 创建径向渐变填充
+                const gradient = ctx.createRadialGradient(0, 0, innerRadius, 0, 0, outerRadius);
+
+                // 统一使用"软边缘"渐变
+                // 0.0 -> 0: 确保内边缘(包括撞墙时的直线)完全透明，消除硬边
+                // 0.1 -> 0.3: 快速过渡到正常的半透明态，保持原有的波纹视觉感
+                gradient.addColorStop(0, `rgba(${secondary.r}, ${secondary.g}, ${secondary.b}, 0)`);
+                gradient.addColorStop(0.1, `rgba(${secondary.r}, ${secondary.g}, ${secondary.b}, ${alpha * 0.3})`);
+                gradient.addColorStop(0.3, `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${alpha})`);
+                gradient.addColorStop(0.7, `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${alpha * 0.8})`);
+                gradient.addColorStop(1, `rgba(${secondary.r}, ${secondary.g}, ${secondary.b}, ${alpha * 0.2})`);
+
+                // 发光效果
+                ctx.shadowColor = `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${alpha * 0.8})`;
+                // 撞墙时关闭发光，防止内边缘显示出阴影线条
+                ctx.shadowBlur = isTouchingBoundary ? 0 : config.glowIntensity;
+
+                ctx.fillStyle = gradient;
+                ctx.fill('evenodd');
+
+                // ===== 额外叠加层：处理撞墙部分的渐变 (撞墙处实心 -> 向内透明) =====
+                // 仅在撞墙方向绘制，叠加在原环之上，且填补内圈的空洞
+                if (isTouchingBoundary) {
+                    const overlayWidth = 50; // 增加宽度以覆盖过渡区
+
+                    // 公共叠加绘制函数
+                    const drawOverlay = (rectX, rectY, rectW, rectH, gradStart, gradEnd) => {
+                        ctx.save();
+                        // 1. 裁剪到边缘区域
+                        ctx.beginPath();
+                        ctx.rect(rectX, rectY, rectW, rectH);
+                        ctx.clip();
+
+                        // 2. 裁剪到波纹外形 (不包含内圈空洞，实现"无内边"效果)
+                        ctx.beginPath();
+                        ctx.moveTo(outerPoints[0].x, outerPoints[0].y);
+                        for (let i = 1; i < outerPoints.length; i++) ctx.lineTo(outerPoints[i].x, outerPoints[i].y);
+                        ctx.closePath();
+                        ctx.clip();
+
+                        // 3. 绘制线性渐变
+                        const lg = ctx.createLinearGradient(gradStart.x, gradStart.y, gradEnd.x, gradEnd.y);
+                        lg.addColorStop(0, `rgba(${primary.r}, ${primary.g}, ${primary.b}, ${alpha})`); // 墙边：实色
+                        lg.addColorStop(1, `rgba(${primary.r}, ${primary.g}, ${primary.b}, 0)`);       // 向内：透明
+                        ctx.fillStyle = lg;
+                        ctx.fillRect(rectX, rectY, rectW, rectH);
+
+                        ctx.restore();
+                    };
+
+                    // 1. 左边界
+                    if (isHitLeft) {
+                        drawOverlay(
+                            -this.x, -this.y, overlayWidth, height,
+                            { x: -this.x, y: 0 }, { x: -this.x + overlayWidth, y: 0 }
+                        );
+                    }
+                    // 2. 右边界
+                    if (isHitRight) {
+                        drawOverlay(
+                            width - this.x - overlayWidth, -this.y, overlayWidth, height,
+                            { x: width - this.x, y: 0 }, { x: width - this.x - overlayWidth, y: 0 }
+                        );
+                    }
+                    // 3. 上边界
+                    if (isHitTop) {
+                        drawOverlay(
+                            -this.x, -this.y, width, overlayWidth,
+                            { x: 0, y: -this.y }, { x: 0, y: -this.y + overlayWidth }
+                        );
+                    }
+                    // 4. 下边界
+                    if (isHitBottom) {
+                        drawOverlay(
+                            -this.x, height - this.y - overlayWidth, width, overlayWidth,
+                            { x: 0, y: height - this.y }, { x: 0, y: height - this.y - overlayWidth }
+                        );
+                    }
+                }
 
                 ctx.restore();
             }
         }
 
-        function init() {
-            resize();
-            particles = [];
-            for (let i = 0; i < config.count; i++) {
-                particles.push(new Particle());
+        // 创建新波纹
+        function createRipple(x, y) {
+            // 限制最大波纹数量
+            if (ripples.length >= config.maxRipples) {
+                ripples.shift();  // 移除最旧的波纹
+            }
+            ripples.push(new Ripple(x, y));
+        }
+
+        // 自动触发波纹
+        function autoTrigger() {
+            const now = Date.now();
+            if (now - lastAutoTrigger >= config.autoTriggerInterval) {
+                lastAutoTrigger = now;
+
+                // 如果鼠标在页面内，使用鼠标位置；否则使用随机位置
+                let x, y;
+                if (mousePos.x >= 0 && mousePos.x <= width &&
+                    mousePos.y >= 0 && mousePos.y <= height) {
+                    x = mousePos.x;
+                    y = mousePos.y;
+                } else {
+                    x = Math.random() * width * 0.6 + width * 0.2;  // 20%-80%范围内
+                    y = Math.random() * height * 0.6 + height * 0.2;
+                }
+                createRipple(x, y);
             }
         }
 
         function animate() {
             ctx.clearRect(0, 0, width, height);
-            time = Date.now();
-            renderMouse.x = lerp(renderMouse.x, targetMouse.x, config.mouseLag);
-            renderMouse.y = lerp(renderMouse.y, targetMouse.y, config.mouseLag);
 
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+            // 自动触发检查
+            // autoTrigger();
+
+            // 更新和绘制波纹
+            ripples = ripples.filter(ripple => !ripple.isDead());
+            ripples.forEach(ripple => ripple.draw());
+
             requestAnimationFrame(animate);
         }
 
+        // 事件监听
         document.addEventListener('mousemove', e => {
-            targetMouse.x = e.clientX;
-            targetMouse.y = e.clientY;
-        });
-        document.addEventListener('mouseleave', () => {
-            targetMouse.x = -2000;
-            targetMouse.y = -2000;
-        });
-        window.addEventListener('resize', () => {
-            resize();
-            init();
+            mousePos.x = e.clientX;
+            mousePos.y = e.clientY;
         });
 
-        init();
+        document.addEventListener('mouseleave', () => {
+            mousePos.x = -1000;
+            mousePos.y = -1000;
+        });
+
+        // 点击触发波纹
+        document.addEventListener('click', e => {
+            createRipple(e.clientX, e.clientY);
+        });
+
+        // 触摸支持
+        document.addEventListener('touchstart', e => {
+            if (e.touches.length > 0) {
+                createRipple(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        window.addEventListener('resize', resize);
+
+        // 初始化
+        resize();
         animate();
     })();
 </script>
