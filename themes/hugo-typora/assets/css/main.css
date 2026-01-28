@@ -142,7 +142,7 @@ html {
     font-size: 0.85rem;
     color: var(--text-color);
     text-decoration: none;
-    border: 1px solid var(--border-color);
+    border: 1px solid transparent;
     border-radius: 6px;
     transition: all 0.2s ease;
 }
@@ -171,6 +171,7 @@ html {
     /* Circular logo */
     margin-right: 10px;
     object-fit: cover;
+    background: transparent;
 }
 
 .site-title {
