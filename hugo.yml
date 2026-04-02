@@ -1,6 +1,6 @@
 baseURL: https://www.compassak.com/
 languageCode: zh-CN
-title: OMPASSAK
+title: COMPASSAK
 theme: hugo-typora
 enableGitInfo: true
 relativeURLs: true
@@ -48,6 +48,6 @@ outputFormats:
 params:
   # Hero Section Configuration
   hero:
-    title: "COMPASSAK"                    # 主标题 (支持 HTML)
-    description: "It's not possible. No, it's necessary."
+    title: "Developer's <span class=\"italic font-normal text-primary\">Logbook</span>."  # 主标题 (支持 HTML)
+    description: "A continuously evolving repository of thoughts. Documenting explorations in algorithms, data structures, and the craft of backend engineering."
     rss: true                                      # 是否显示 RSS 订阅按钮

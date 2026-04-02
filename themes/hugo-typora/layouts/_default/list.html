@@ -1,12 +1,91 @@
 {{ define "main" }}
-<div class="article-list">
-    <h1>{{ .Title }}</h1>
-    {{ .Content }}
+<!-- Break out of the narrow container constraints from baseof.html to give a wide grid -->
+<div class="w-[100vw] relative left-1/2 -translate-x-1/2">
+    <div class="max-w-[1920px] mx-auto px-8 md:px-16 pb-24">
+        <!-- Header -->
+        <header class="mb-16 max-w-4xl pt-8">
+            <div class="inline-flex items-center px-3 py-1 bg-gray-100 dark:bg-stone-800 rounded-md mb-6">
+                <span class="text-[10px] font-sans uppercase tracking-[0.2em] font-semibold text-gray-500 dark:text-stone-400">Category / Directory</span>
+            </div>
+            <h1 class="font-headline text-5xl md:text-6xl font-bold tracking-tight text-teal-800 dark:text-teal-200 mb-4" style="margin-top: 0; border: none; line-height: 1.2;">
+                {{ .Title }}
+            </h1>
+            {{ if .Content }}
+            <div class="font-body text-xl text-stone-600 dark:text-stone-400 mt-6 leading-relaxed max-w-2xl">
+                {{ .Content }}
+            </div>
+            {{ end }}
+            <div class="h-[1px] w-full bg-stone-200 dark:bg-stone-800 mt-12 mb-12"></div>
+        </header>
 
-    {{ range .Pages }}
-    <article class="post-preview">
-        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-    </article>
-    {{ end }}
+        <!-- Multi-column Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+            {{ range .Paginator.Pages }}
+            <article
+                class="group flex flex-col h-full bg-white dark:bg-stone-900 rounded-xl shadow-[0_10px_40px_rgba(25,28,29,0.05)] dark:shadow-none dark:border dark:border-stone-800 overflow-hidden hover:-translate-y-1 transition-all duration-300">
+                {{ $img := (.Resources.ByType "image").GetMatch "*featured*" }}
+                <a href="{{ .RelPermalink }}" class="block" style="text-decoration: none;">
+                    <div class="aspect-[4/3] overflow-hidden bg-stone-100 dark:bg-stone-800 flex items-center justify-center">
+                        {{ if $img }}
+                        <img alt="{{ .Title }}"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            src="{{ $img.RelPermalink }}" style="margin: 0; background-color: transparent;" />
+                        {{ else }}
+                        <span class="material-symbols-outlined text-stone-300 dark:text-stone-600 text-6xl">article</span>
+                        {{ end }}
+                    </div>
+                </a>
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="flex justify-between items-start mb-4">
+                        {{ if .Params.categories }}
+                        <span class="text-[10px] font-sans uppercase tracking-widest text-teal-700 dark:text-teal-400 font-bold bg-teal-50 dark:bg-teal-900/30 px-2 py-1 rounded" style="color: #0d9488;">{{ index .Params.categories 0 }}</span>
+                        {{ else }}
+                        <span class="text-[10px] font-sans uppercase tracking-widest text-teal-700 dark:text-teal-400 font-bold bg-teal-50 dark:bg-teal-900/30 px-2 py-1 rounded" style="color: #0d9488;">Article</span>
+                        {{ end }}
+                        <span class="text-[10px] font-sans text-stone-400">{{ .Date.Format "Jan 02, 2006" | upper }}</span>
+                    </div>
+                    <a href="{{ .RelPermalink }}" class="block mb-3" style="text-decoration: none;">
+                        <h3 class="font-headline text-lg font-bold text-stone-900 dark:text-stone-100 leading-snug group-hover:text-teal-700 dark:group-hover:text-teal-400 transition-colors" style="margin: 0; border: none; padding: 0;">
+                            {{ .Title }}
+                        </h3>
+                    </a>
+                    <p class="font-body text-sm text-stone-600 dark:text-stone-400 line-clamp-2 mb-6" style="margin-bottom: 24px;">
+                        {{ .Summary | truncate 150 }}
+                    </p>
+                    <div class="mt-auto pt-4 border-t border-stone-100 dark:border-stone-800 flex justify-between items-center">
+                        <span class="text-[10px] font-sans text-stone-400 italic">
+                            {{ if .ReadingTime }}{{ .ReadingTime }} min read{{ else }}Read{{ end }}
+                        </span>
+                        <a class="text-teal-700 dark:text-teal-400 text-[10px] font-sans uppercase tracking-widest font-bold hover:underline underline-offset-4"
+                            href="{{ .RelPermalink }}" style="color: #0d9488; text-decoration: none;">Read Post</a>
+                    </div>
+                </div>
+            </article>
+            {{ end }}
+        </div>
+
+        <!-- Pagination Section -->
+        {{ if gt .Paginator.TotalPages 1 }}
+        <div class="mt-20 flex justify-center items-center space-x-2">
+            {{ if .Paginator.HasPrev }}
+            <a href="{{ .Paginator.Prev.URL }}"
+                class="w-10 h-10 flex items-center justify-center rounded-lg border border-stone-200 dark:border-stone-700 text-stone-400 hover:text-teal-700 hover:border-teal-700 transition-all font-sans" style="text-decoration: none;">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </a>
+            {{ end }}
+            
+            <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-teal-700 text-white font-bold text-sm font-sans border-none" style="background-color: #0f766e;">{{ .Paginator.PageNumber }}</button>
+            <span class="text-stone-400 px-2 font-sans">/</span>
+            <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-400 font-medium text-sm font-sans border-none cursor-default bg-transparent">{{ .Paginator.TotalPages }}</button>
+
+            {{ if .Paginator.HasNext }}
+            <a href="{{ .Paginator.Next.URL }}"
+                class="w-10 h-10 flex items-center justify-center rounded-lg border border-stone-200 dark:border-stone-700 text-stone-400 hover:text-teal-700 hover:border-teal-700 transition-all font-sans" style="text-decoration: none;">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </a>
+            {{ end }}
+        </div>
+        {{ end }}
+    </div>
 </div>
 {{ end }}

@@ -1,0 +1,13 @@
+[
+  {{- range $index, $page := .Site.RegularPages -}}
+    {{- if gt $index 0 -}} , {{- end -}}
+    {
+      "id": "{{ .RelPermalink }}",
+      "title": {{ .Title | jsonify }},
+      "content": {{ .Plain | htmlUnescape | plainify | jsonify }},
+      "permalink": {{ .RelPermalink | jsonify }},
+      "category": {{ if .Params.categories }}{{ index .Params.categories 0 | jsonify }}{{ else }}"Article"{{ end }},
+      "date": "{{ .Date.Format "Jan 02, 2006" | upper }}"
+    }
+  {{- end -}}
+]

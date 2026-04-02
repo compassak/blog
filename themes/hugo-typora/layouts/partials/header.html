@@ -1,23 +1,27 @@
-<header class="site-header">
-    <div class="container page-home">
-        <div class="header-inner">
-            <div class="site-branding">
-                <a href="{{ .Site.BaseURL }}" class="site-logo-link">
-                    {{ $logo := resources.Get "images/logo.png" }}
-                    {{ if $logo }}
-                    <img src="{{ $logo.RelPermalink }}" alt="{{ .Site.Title }}" class="site-logo">
-                    {{ end }}
-                    <span class="site-title">{{ .Site.Title }}</span>
-                </a>
+<!-- Spacer to push content below fixed navbar (height: 80px) -->
+<div style="height: 80px; width: 100%;"></div>
+
+<nav class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-stone-900/80 backdrop-blur-xl border-b border-gray-100 dark:border-stone-800 box-border" style="font-family: 'Inter', sans-serif; box-sizing: border-box;">
+    <div class="flex justify-between items-center max-w-7xl w-full mx-auto px-8 h-20 box-border" style="box-sizing: border-box;">
+        <div class="flex items-center gap-12" style="box-sizing: border-box;">
+            <a class="text-2xl font-headline italic text-teal-800 dark:text-teal-200 tracking-tight"
+                href="{{ .Site.BaseURL }}" style="text-decoration: none; box-sizing: border-box;">{{ .Site.Title }}</a>
+            <div class="hidden md:flex items-center gap-8" style="box-sizing: border-box;">
+                <a class="text-teal-700 dark:text-teal-400 border-b-2 border-teal-700 pb-1 text-sm font-medium tracking-wide transition-opacity duration-300"
+                    href="{{ .Site.BaseURL }}" style="text-decoration: none; box-sizing: border-box;">Articles</a>
             </div>
-            {{ with .Site.Params.hero.rss }}
-            <nav class="header-nav">
-                <a href="{{ $.Site.BaseURL }}index.xml" class="header-rss-link" title="订阅 RSS">
-                    <i class="fa-solid fa-rss"></i>
-                    <span>RSS</span>
-                </a>
-            </nav>
-            {{ end }}
+        </div>
+        <div class="flex items-center gap-6" style="box-sizing: border-box;">
+            <div class="hidden md:flex items-center bg-[#f3f4f5] dark:bg-stone-800 px-4 py-2 rounded-full border border-gray-200 dark:border-stone-700 relative box-border" style="box-sizing: border-box;">
+                <span class="material-symbols-outlined text-gray-400 text-lg mr-2" style="box-sizing: border-box;">search</span>
+                <input
+                    class="custom-search-input bg-transparent border-none focus:outline-none focus:ring-0 text-sm w-48 text-gray-700 dark:text-gray-300 placeholder-gray-400"
+                    placeholder="Explore..." type="text" style="outline: none; box-shadow: none; box-sizing: border-box;" autocomplete="off" />
+                <div class="custom-search-results absolute top-12 right-0 w-[400px] bg-white dark:bg-stone-900 shadow-[0_10px_40px_rgba(25,28,29,0.1)] rounded-xl border border-gray-100 dark:border-stone-800 hidden flex-col overflow-hidden max-h-[60vh] overflow-y-auto z-50" style="font-family: 'Inter', sans-serif;"></div>
+            </div>
+            <a class="text-teal-700 dark:text-teal-400 hover:opacity-70 transition-opacity duration-300" href="{{ .Site.BaseURL }}index.xml" style="text-decoration: none; box-sizing: border-box;">
+                <span class="material-symbols-outlined" style="box-sizing: border-box;">rss_feed</span>
+            </a>
         </div>
     </div>
-</header>
+</nav>
