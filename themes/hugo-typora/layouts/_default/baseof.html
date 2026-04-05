@@ -12,21 +12,12 @@
     {{ $syntax := resources.Get "css/syntax.css" }}
     <link rel="stylesheet" href="{{ $syntax.RelPermalink }}">
 
-    <!-- Fonts - JetBrains Mono for code -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <!-- FontAwesome (Optional, loaded via CDN for now as per requirements to use Icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Fonts for the new Navbar -->
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-    
-    <!-- Tailwind for the new Navbar -->
+    <!-- Local fonts -->
+    <link rel="preload" href="{{ "fonts/jetbrains-mono-latin.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ "fonts/inter-latin.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ "fonts/noto-serif-latin.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ "fonts/noto-serif-italic-latin.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ "fonts/material-symbols-outlined.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
         tailwind.config = {
@@ -41,15 +32,72 @@
                         "outline-variant": "#bec8cb"
                     },
                     fontFamily: {
-                        "headline": ["Noto Serif"],
-                        "body": ["Inter"]
+                        "headline": ["Noto Serif", "Georgia", "Times New Roman", "Times", "serif"],
+                        "body": ["Inter", "system-ui", "-apple-system", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif"]
                     }
                 }
             }
         }
     </script>
     <style>
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('{{ "fonts/jetbrains-mono-latin.woff2" | relURL }}') format('woff2');
+            font-style: normal;
+            font-weight: 400 600;
+            font-display: block;
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('{{ "fonts/inter-latin.woff2" | relURL }}') format('woff2');
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: block;
+        }
+
+        @font-face {
+            font-family: 'Noto Serif';
+            src: url('{{ "fonts/noto-serif-latin.woff2" | relURL }}') format('woff2');
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: block;
+        }
+
+        @font-face {
+            font-family: 'Noto Serif';
+            src: url('{{ "fonts/noto-serif-italic-latin.woff2" | relURL }}') format('woff2');
+            font-style: italic;
+            font-weight: 400;
+            font-display: block;
+        }
+
+        @font-face {
+            font-family: 'Material Symbols Outlined';
+            src: url('{{ "fonts/material-symbols-outlined.woff2" | relURL }}') format('woff2');
+            font-style: normal;
+            font-weight: 100 700;
+            font-display: block;
+        }
+
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1em;
+            height: 1em;
+            line-height: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            letter-spacing: normal;
+            text-transform: none;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
     </style>
 </head>
 

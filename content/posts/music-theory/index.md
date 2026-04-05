@@ -1,7 +1,7 @@
 ---
 title: "Music-Theory"
 date: 2021-07-21T20:51:30+08:00
-categories: ["music"]
+categories: ["Music"]
 tags:  ["music", "music-theory"]
 ---
 

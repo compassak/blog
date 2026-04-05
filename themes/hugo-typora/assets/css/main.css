@@ -1,7 +1,8 @@
 /* Fonts */
 :root {
-    --font-sans: "San Francisco", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --font-mono: "JetBrains Mono", monospace;
+    --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-serif: "Noto Serif", Georgia, "Times New Roman", Times, serif;
 
     /* Light Mode (Github Style) */
     --bg-color: #ffffff;
@@ -440,14 +441,13 @@ img {
 }
 
 .post-categories a,
-.post-tags a {
+.post-tags span {
     color: var(--blockquote-color);
     margin-right: 0.5rem;
     text-decoration: none;
 }
 
-.post-categories a:hover,
-.post-tags a:hover {
+.post-categories a:hover {
     color: var(--link-color);
 }
 

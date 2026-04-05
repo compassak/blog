@@ -13,7 +13,7 @@
                 {{ if .Params.categories }}
                 <span class="post-categories">
                     {{ range .Params.categories }}
-                    <a href="{{ " /categories/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+                    <a href="{{ (printf "/categories/%s/" (. | urlize)) | relLangURL }}">{{ . }}</a>
                     {{ end }}
                 </span>
                 {{ end }}
@@ -28,7 +28,7 @@
             {{ if .Params.tags }}
             <div class="post-tags">
                 {{ range .Params.tags }}
-                <a href="{{ " /tags/" | relLangURL }}{{ . | urlize }}">#{{ . }}</a>
+                <span>#{{ . }}</span>
                 {{ end }}
             </div>
             {{ end }}
